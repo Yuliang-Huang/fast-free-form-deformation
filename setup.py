@@ -1,5 +1,6 @@
 from setuptools import setup
 from torch.utils.cpp_extension import CUDAExtension, BuildExtension
+import os
 
 setup(
     name='ffd',
@@ -8,13 +9,16 @@ setup(
         CUDAExtension(
             name='ffd._C', 
             sources=[
-                'backward.cu',
-                'forward.cu',
-                'bspline_interpolation.cu',
-                'control_point_grid.cu',
-                'pytorch_interface.cu',
-                'ext.cpp'
-            ]
+                'cuda/backward.cu',
+                'cuda/forward.cu',
+                'cuda/bspline_interpolation.cu',
+                'cuda/control_point_grid.cu',
+                'cuda/pytorch_interface.cu',
+                'cuda/ext.cpp'
+            ],
+            extra_compile_args={
+                "nvcc": ["-I" + os.path.join(os.path.dirname(os.path.abspath(__file__)),'cuda')]
+                }
         )
     ],
     cmdclass={'build_ext': BuildExtension}
